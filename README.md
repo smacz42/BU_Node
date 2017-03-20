@@ -2,7 +2,14 @@
 
 Role to set up [Bitcoin Node Stats](https://github.com/bartromgens/bitcoinnodestats) web service on top of setting up a Bitcoin Unlimited node.
 
-With the recent [DDoS attacks](https://www.reddit.com/r/btc/comments/60cxj1/bitcoinunlimitedinfo_under_ddos_download_bu_from/) that came along with the surge in popularity, every little bit of decentralization helps. 
+With the recent [DDoS attacks](https://www.reddit.com/r/btc/comments/60cxj1/bitcoinunlimitedinfo_under_ddos_download_bu_from/) that came along with the surge in popularity, every little bit of decentralization helps.
+
+## Invocation
+
+```
+$ git clone https://github.com/smacz42/BU_Node && cd BU_Node
+$ ansible-playbook site.yml -i inventory/dev --vault-password-file=../vault_pass.txt
+```
 
 # Roles
 
