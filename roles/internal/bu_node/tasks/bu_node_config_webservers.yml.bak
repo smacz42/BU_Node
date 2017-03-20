@@ -1,0 +1,54 @@
+---
+# Tasks for bu_node_config_webservers
+
+- name: (bu_node_config_webservers) [1/7] Template bitcoin.conf (minimal) is deployed
+  template:
+    src: ../templates/bitcoin.conf.minimal.j2
+    dest: '/srv/httpd/bitcoin.conf'
+
+- name: (bu_node_config_webservers) [1/7] Install python3 virtualenv
+  pip:
+    executable: /usr/bin/pip3
+    name: virtualenv
+
+- name: (bu_node_config_webservers) [3/10] Create virtualenv
+
+- name: (bu_node_config_webservers) [2/7] Create the virtualenv local settings
+  command: "{{ bu_node_root_dir }}/env/bin/python {{ bu_node_root_dir }}/create_local_settings.py"
+  args:
+    chdir: "{{ bu_node_root_dir }}"
+    creates: "{{ bu_node_root_dir }}/{{ httpd_webservice }}/local_settings.py"
+
+- name: (bu_node_config_webservers) [2/7] Migrate the virtualenv data
+  command: "{{ bu_node_root_dir }}/env/bin/python {{ bu_node_root_dir }}/manage.py migrate"
+  args:
+    chdir: "{{ bu_node_root_dir }}"
+
+- name: (bu_node_config_webservers) [3/7] Template {{ bu_node_root_dir }}/bitcoinnodestats/templates/base.html is deployed
+  template:
+    src: ../templates/base.html.j2
+    dest: "{{ bu_node_root_dir }}/bitcoinnodestats/templates/base.html"
+  notify: Restart httpd
+
+- name: (bu_node_config_webservers) [4/7] Template {{ bu_node_root_dir }}/bitcoinnodestats/settings.py is deployed
+  template:
+    src: ../templates/settings.py.j2
+    dest: "{{ bu_node_root_dir }}/bitcoinnodestats/settings.py"
+  notify: Restart httpd
+
+- name: (bu_node_config_webservers) [5/7] Template {{ bu_node_root_dir }}/bitcoinnodestats/local_settings.py is deployed
+  template:
+    src: ../templates/local_settings.py.j2
+    dest: "{{ bu_node_root_dir }}/bitcoinnodestats/local_settings.py"
+  notify: Restart httpd
+
+- name: (bu_node_config_webservers) [6/7] Cron job every hour to create status records is configured
+  cron:
+    minute: "0"
+    job: "source {{ bu_node_root_dir }}/env/bin/activate && python {{ bu_node_root_dir }}/manage.py runcrons > {{ bu_node_root_dir }}/cronjob.log 2>&1"
+
+- name: (bu_node_config_webservers) [2/7] Create the python3 virtual environment
+  command: "{{ bu_node_root_dir }}/env/bin/python {{ bu_node_root_dir }}/manage.py collectstatic"
+  args:
+    chdir: "{{ bu_node_root_dir }}"
+  notify: Restart httpd

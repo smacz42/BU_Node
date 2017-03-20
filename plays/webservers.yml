@@ -1,0 +1,8 @@
+---
+
+- name: BU_node - webservers
+  hosts: webservers
+  remote_user: root
+
+  roles:
+      - httpd

@@ -1,0 +1,14 @@
+# This is inventory file for dev stage
+
+[webservers]
+#bu-node-single.vmlab
+bu-node-webserver3.vmlab
+
+[nodes]
+#bu-node-single.vmlab
+bu-node-webserver4.vmlab
+
+
+[all:vars]
+# Sets the environment to development(dev) or production (prod)
+network=dev

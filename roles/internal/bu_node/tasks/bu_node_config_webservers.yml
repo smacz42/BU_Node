@@ -1,0 +1,69 @@
+---
+# Tasks for bu_node_config_webservers
+
+- name: (bu_node_config_webservers) [1/9] Template bitcoin.conf (minimal) is deployed
+  template:
+    src: ../templates/bitcoin.conf.minimal.j2
+    dest: '/srv/httpd/bitcoin.conf'
+
+- name: (bu_node_config_webservers) [2/9] Migrate the virtualenv data
+  command: "{{ bu_node_root_dir }}/env/bin/python {{ bu_node_root_dir }}/manage.py migrate"
+  args:
+    chdir: "{{ bu_node_root_dir }}"
+
+- name: (bu_node_config_webservers) [3/9] Template {{ bu_node_root_dir }}/bitcoinnodestats/templates/base.html is deployed
+  template:
+    src: ../templates/base.html.j2
+    dest: "{{ bu_node_root_dir }}/bitcoinnodestats/templates/base.html"
+  notify: Restart httpd
+
+- name: (bu_node_config_webservers) [4/9] Template {{ bu_node_root_dir }}/bitcoinnodestats/settings.py is deployed
+  template:
+    src: ../templates/settings.py.j2
+    dest: "{{ bu_node_root_dir }}/bitcoinnodestats/settings.py"
+  notify: Restart httpd
+
+- name: (bu_node_config_webservers) [5/9] Template {{ bu_node_root_dir }}/bitcoinnodestats/local_settings.py is deployed
+  template:
+    src: ../templates/local_settings.py.j2
+    dest: "{{ bu_node_root_dir }}/bitcoinnodestats/local_settings.py"
+    owner: apache
+    group: apache
+    mode: 0644
+  notify: Restart httpd
+
+- name: (bu_node_config_webservers) [6/9] Cron job every hour to create status records is configured
+  cron:
+    minute: "0"
+    job: "source {{ bu_node_root_dir }}/env/bin/activate && python {{ bu_node_root_dir }}/manage.py runcrons > {{ bu_node_root_dir }}/cronjob.log 2>&1"
+
+- name: (bu_node_config_webservers) [6/9] Cron job every hour to collect static data
+  cron:
+    minute: "1"
+    job: "source {{ bu_node_root_dir }}/env/bin/activate && python {{ bu_node_root_dir }}/manage.py collectstatic"
+
+- name: (bu_node_config_webservers) [7/9] Template {{ bu_node_root_dir }}/bitcoinnodestats/static/js/daterangepicker.js is deployed
+  template:
+    src: ../templates/daterangepicker.js.j2
+    dest: "{{ bu_node_root_dir }}/bitcoinnodestats/static/js/daterangepicker.js"
+  notify: Restart httpd
+
+- name: (bu_node_config_webservers) [8/9] Collect the static files
+  command: "{{ bu_node_root_dir }}/env/bin/python {{ bu_node_root_dir }}/manage.py collectstatic --noinput"
+  args:
+    chdir: "{{ bu_node_root_dir }}"
+  notify: Restart httpd
+
+- name: (bu_node_config_webservers) [9/9] File mod_wsgi-py34.cpython-34m.so is linked to /etc/httpd/mod_wsgi.so
+  file:
+    state: link
+    src: /usr/lib64/python3.4/site-packages/mod_wsgi/server/mod_wsgi-py34.cpython-34m.so
+    dest: /etc/httpd/modules/mod_wsgi.so
+
+- name: (bu_node_config_webservers) [FIXME] /srv is owned by apache
+  file:
+    state: directory
+    path: /srv
+    owner: apache
+    group: apache
+    recurse: yes

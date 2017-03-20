@@ -1,0 +1,6 @@
+/home/bitcoin/.bitcoin/bitcoin.conf
+/home/Fett/.bitcoin/bitcoin.conf
+/root/.bitcoin/bitcoin.conf
+/usr/share/httpd/.bitcoin/bitcoin.conf
+/usr/src/bu-src/contrib/debian/examples/bitcoin.conf
+/srv/httpd/bitcoin.conf

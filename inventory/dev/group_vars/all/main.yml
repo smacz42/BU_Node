@@ -1,0 +1,6 @@
+---
+# For use on Arch Linux
+ansible_python_interpreter: /usr/bin/python2
+
+bu_node_root_dir: '/srv/httpd/bitcoinnodestats'
+

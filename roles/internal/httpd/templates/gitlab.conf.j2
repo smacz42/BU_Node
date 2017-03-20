@@ -1,0 +1,27 @@
+# {{ ansible_managed }}
+#
+# This configuration has been tested on GitLab 8.2
+# Note this config assumes unicorn is listening on default port 8080 and
+# gitlab-workhorse is listening on port 8181. To allow gitlab-workhorse to
+# listen on port 8181, edit /etc/gitlab/gitlab.rb and change the following:
+#
+# gitlab_workhorse['listen_network'] = "tcp"
+# gitlab_workhorse['listen_addr'] = "127.0.0.1:8181"
+#
+#Module dependencies
+# mod_rewrite
+# mod_ssl
+# mod_proxy
+# mod_proxy_http
+# mod_headers
+
+# This section is only needed if you want to redirect http traffic to https.
+# You can live without it but clients will have to type in https:// to reach gitlab.
+<VirtualHost *:80>
+  ServerName {{ httpd_ServerName }}
+  ServerSignature Off
+
+  RewriteEngine on
+  RewriteCond %{HTTPS} !=on
+  RewriteRule .* https://%{SERVER_NAME}%{REQUEST_URI} [NE,R,L]
+</VirtualHost>

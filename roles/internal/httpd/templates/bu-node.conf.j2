@@ -1,0 +1,23 @@
+# {{ ansible_managed }}
+
+<VirtualHost *:80>
+
+    ServerName {{ httpd_ServerName }}
+
+{% if httpd_tls_enforce %}
+    Redirect permanent / https://{{ httpd_ServerName }}
+{% else %}
+
+# General setup for the virtual host, inherited from global configuration
+    DocumentRoot {{ httpd_DocumentRoot }}
+    <Directory "{{ httpd_DocumentRoot }}">
+        Allow from all
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+    </Directory>
+    ErrorLog {{ httpd_ErrorLog }}
+    TransferLog {{ httpd_AccessLog }}
+    LogLevel {{ httpd_LogLevel }}
+{% endif %}
+</VirtualHost>

@@ -1,0 +1,7 @@
+---
+# Tasks for bu_node_config
+
+- name: (bu_node_config) [1/1] Template bitcoin.conf (minimal) is deployed for root
+  template:
+    src: ../templates/bitcoin.conf.minimal.j2
+    dest: '/root/.bitcoin/bitcoin.conf'

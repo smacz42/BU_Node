@@ -1,0 +1,169 @@
+---
+
+################################################################################### Bitcoin.conf config file
+
+#
+# Network-related settings
+#
+
+# Listening mode, enabled by default except when 'connect' is being used
+bu_node_listen: True
+
+# Maximum number of inbound+outbound connections.
+bu_node_maxconnections: 32
+
+# Run on the test network instead of the real bitcoin network.
+bu_node_testnet: False
+
+# Run a regression test network
+bu_node_regtest: False
+
+# Connect via a SOCKS5 proxy
+# - { ip: 1.2.3.4, port: 9050 } or False
+bu_node_proxy: False
+
+# Bind to given address and always listen on it. Use [host]:port notation for IPv6
+# False=0.0.0.0/32:8333
+bu_node_bind: False
+
+# Bind to given address and whitelist peers connecting to it. Use [host]:port notation for IPv6
+bu_node_whitebind: False
+
+##############################################################
+##            Quick Primer on addnode vs connect            ##
+##  Let's say for instance you use addnode=4.2.2.4          ##
+##  addnode will connect you to and tell you about the      ##
+##    nodes connected to 4.2.2.4.  In addition it will tell ##
+##    the other nodes connected to it that you exist so     ##
+##    they can connect to you.                              ##
+##  connect will not do the above when you 'connect' to it. ##
+##    It will *only* connect you to 4.2.2.4 and no one else.##
+##                                                          ##
+##  So if you're behind a firewall, or have other problems  ##
+##  finding nodes, add some using 'addnode'.                ##
+##                                                          ##
+##  If you want to stay private, use 'connect' to only      ##
+##  connect to "trusted" nodes.                             ##
+##                                                          ##
+##  If you run multiple nodes on a LAN, there's no need for ##
+##  all of them to open lots of connections.  Instead       ##
+##  'connect' them all to one node that is port forwarded   ##
+##  and has lots of connections.                            ##
+##       Thanks goes to [Noodle] on Freenode.               ##
+##############################################################
+
+# Use as many addnode= settings as you like to connect to specific peers
+bu_node_addnodes: False
+#- { ip: 1.2.3.4, port: 8333 }
+
+# Alternatively use as many connect= settings as you like to connect ONLY to specific peers
+bu_node_connects: False
+#- { ip: 1.2.3.4, port: 8333 }
+#
+# JSON-RPC options (for controlling a running Bitcoin/bitcoind process)
+#
+
+# By default, only RPC connections from localhost are allowed.
+# NOTE: opening up the RPC port to hosts outside your local trusted network is NOT RECOMMENDED,
+# because the rpcpassword is transmitted over the network unencrypted.
+bu_node_rpc_server:
+  # tells Bitcoin-Qt and bitcoind to accept JSON-RPC commands
+  active: True
+  # Bind to given address to listen for JSON-RPC connections. Use [host]:port notation for IPv6.
+  # This option can be specified multiple times (default: bind to all interfaces)
+  # or False
+  bind:
+    - { ip: 127.0.0.1, port: 8332 }
+  # You must set rpcuser and rpcpassword to secure the JSON-RPC api
+  user: Thrawn
+  password: "{{ vault_bu_node_rpc_server_password }}"
+  # How many seconds bitcoin will wait for a complete RPC HTTP request.
+  # after the HTTP connection is established. 
+  timeout: 30
+  # Settings for splitting the webserver and/or multiple nodes
+  split:
+    active: False
+    # Specify as many rpcallowip= settings as you like to allow connections from other hosts,
+    # either as a single IPv4/IPv6 or with a subnet specification.
+    # False or Suggestions:
+    #   - {{ hosts.webservers['0'].ip_addr }}
+    allowip: False
+  # You can use Bitcoin or bitcoind to send commands to Bitcoin/bitcoind
+  # running on another host using this option:
+  # False or list of ip addresses
+    connect: False
+
+#
+# Transaction Fee Changes in 0.10.0
+#
+
+# Send transactions as zero-fee transactions if possible (default: 0)
+bu_node_sendfreetransactions: False
+
+# Create transactions that have enough fees (or priority) so they are likely to begin confirmation within n blocks (default: 1).
+# This setting is over-ridden by the -paytxfee option.
+bu_node_txconfirmtarget: 1
+
+#
+# Miscellaneous options
+#
+
+# Pre-generate this many public/private key pairs, so wallet backups will be valid for
+# both prior transactions and several dozen future transactions.
+bu_node_keypool: 100
+
+# Pay an optional transaction fee every time you send bitcoins.  Transactions with fees
+# are more likely than free transactions to be included in generated blocks, so may
+# be validated sooner.
+bu_node_paytxfee: False
+
+#
+# User interface options
+#
+
+# Start Bitcoin minimized
+bu_node_min: True
+
+# Minimize to the system tray
+bu_node_minimizetotray: True
+
+
+################################################################################### Bitcoin Node Stats
+
+#
+# user settings in local_settings.py
+#
+
+# NOTE: Set to False when migrating into production.
+bu_node_stats_debug: 'True'
+
+# Make this unique, and don't share it with anybody.
+bu_node_stats_secret_key: "{{ vault_bu_node_stats_secret_key }}"
+
+bu_node_stats_admin:
+  name: 'AndrewCz'
+  email: 'andrewcz@neomailbox.net'
+
+bu_node_stats_allowed_hosts:
+  - '*'
+
+# Local time zone for this installation. Choices can be found here:
+# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
+bu_node_stats_timezone: 'America/New_York'
+
+bu_node_stats_static_root: "os.path.join(BASE_DIR, 'static/')"
+bu_node_stats_media_root: "os.path.join(BASE_DIR, 'bitcoinnodestats/static/media/')"
+
+# the absolute path of the bitcoin config file
+# python-bitcoinlib will try to find it in the default location
+# you only need to set this if you have a special location for your bitcoin config
+bu_node_stats_bitcoin_conf_file: '/srv/httpd/bitcoin.conf'
+
+
+################################################################################### Webpage Customizations
+
+# Title in the tab and that is displayed in reference to the window itself
+bu_node_page_title: 'Bitcoin Unlimited Node Stats'
+bu_node_navbar_brand: 'Bitcoin Unlimited Node Stats'
+bu_node_default_interval: '1'
+bu_node_custom_subdir: ''

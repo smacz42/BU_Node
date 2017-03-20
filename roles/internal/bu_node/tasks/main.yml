@@ -1,0 +1,24 @@
+---
+# Tasks for BLANK
+
+- include: bu_node_install.yml
+  tags: [bu_node,bu_node_install,install]
+
+- include: bu_node_install_nodes.yml
+  tags: [bu_node,bu_node_install,install]
+  when: "'nodes' in group_names"
+
+- include: bu_node_install_webservers.yml
+  tags: [bu_node,bu_node_install,install]
+  when: "'webservers' in group_names"
+
+- include: bu_node_config.yml
+  tags: [bu_node,bu_node_config,config]
+
+- include: bu_node_config_nodes.yml
+  tags: [bu_node,bu_node_config,config]
+  when: "'nodes' in group_names"
+
+- include: bu_node_config_webservers.yml
+  tags: [bu_node,bu_node_config,config]
+  when: "'webservers' in group_names"

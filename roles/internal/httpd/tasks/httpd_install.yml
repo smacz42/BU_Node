@@ -1,0 +1,30 @@
+---
+
+- name: (httpd_install) [1/4] Apache, OpenSSL, and mod_ssl are installed and the latest version
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - httpd
+    - openssl
+    - mod_ssl
+  register: httpd_first_run
+
+- name: (httpd_install) [2/4] Apache SSL directory exists
+  file:
+    name: /etc/httpd/ssl
+    state: directory
+    owner: root
+    group: root
+    mode: u=rX,g=rX,o=X
+    recurse: no
+
+- name: (httpd_install) [3/4] New self-signed SSL cert/key pair is generated and deployed
+  command: openssl req -x509 -newkey rsa:2048 -nodes -subj "{{ httpd_ssl_cert_subj_string }}" -days 3650 -keyout {{ httpd_SSLCertificateKeyFile }} -out {{ httpd_SSLCertificateFile }}
+  args:
+    creates: "{{ httpd_SSLCertificateFile }}"
+
+- name: (httpd_install) [4/4] Apache is enabled on boot
+  service:
+    name: httpd
+    enabled: yes

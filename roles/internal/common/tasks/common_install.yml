@@ -1,0 +1,40 @@
+---
+# Update all packages on the system. To be used only when standing up a server. Appropriate cron jobs should be set up to auto-update system packages.
+
+- name: (common_install) [1/7] Update all packages on the system
+  package:
+    name: "*"
+    state: latest
+
+- name: (common_install) [2/7] Install the EPEL for extra packages
+  package:
+    name: epel-release
+    state: latest
+
+- name: (common_install) [3/7] Extra programs are installed
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ extra_progs }}"
+
+- name: (common_install) [4/7] Extra services are enabled
+  service:
+    name: "{{ item }}"
+    enabled: yes
+  with_items: "{{ extra_services }}"
+
+- name: (common_install) [5/7] Vundle is downloaded
+  git:
+    repo: git://github.com/VundleVim/Vundle.vim.git
+    dest: ~/.vim/bundle/Vundle.vim
+    clone: yes
+    update: yes
+
+- name: (common_install) [6/7] SELinux template is ansible_managed
+  template:
+    src: "../templates/config.j2"
+    dest: /etc/selinux/config
+
+- name: (common_install) [7/7] Selinux Set Enforce 0
+  selinux:
+    state: disabled

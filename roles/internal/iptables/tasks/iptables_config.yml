@@ -1,0 +1,41 @@
+---
+# Configure IPTables
+# NOTE: The iptables module just deals with individual rules. If you need advanced chaining of rules the recommended way is to template the iptables restore file.
+#
+# > The iptables-restore command is used to restore the iptables rule-set that was saved with the iptables-save command.
+# -- http://www.iptables.info/en/iptables-save-restore-rules.html
+
+
+- name: (iptables_config) [1/4] iptables config template deployed
+  template:
+    src: ../templates/iptables.j2
+    dest: "{{ iptables_configuration }}"
+    owner: root
+    group: root
+    mode: 0600
+  register: config_result
+  notify:
+    - Restart iptables
+
+- name: (iptables_config) [2/4] ip6tables config template deployed
+  template:
+    src: ../templates/ip6tables.j2
+    dest: "{{ ip6tables_configuration }}"
+    owner: root
+    group: root
+    mode: 0600
+  register: config_result
+  notify:
+    - Restart ip6tables
+
+- name: (iptables_config) [3/4] iptables is started and enabled at boot
+  service:
+    name: "{{ iptables_service_name }}"
+    state: started
+    enabled: yes
+
+- name: (iptables_config) [4/4] ip6tables is started and enabled at boot
+  service:
+    name: "{{ ip6tables_service_name }}"
+    state: started
+    enabled: yes

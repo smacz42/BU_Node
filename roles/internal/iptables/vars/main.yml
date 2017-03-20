@@ -1,0 +1,10 @@
+---
+# vars file for iptables on CentOS
+
+iptables_packages:
+  - iptables
+  - iptables-services
+iptables_service_name: iptables
+ip6tables_service_name: ip6tables
+iptables_configuration: /etc/sysconfig/iptables
+ip6tables_configuration: /etc/sysconfig/ip6tables

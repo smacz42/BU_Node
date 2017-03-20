@@ -1,0 +1,18 @@
+#!/usr/bin/env ansible-playbook
+
+# This is the site.yml playbook
+
+- name: Roles in Common
+  hosts: all
+  gather_facts: true
+  remote_user: root
+  #no_log: true
+  #vars_files:
+  #  - vars/single_host.yml
+
+  roles:
+    - { role: common }
+    - { role: iptables }
+    - { role: bu_node }
+
+- include: plays/webservers.yml

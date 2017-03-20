@@ -1,0 +1,9 @@
+## {{ ansible_managed }}
+
+rpcuser={{ bu_node_rpc_server.user }}
+rpcpassword={{ bu_node_rpc_server.password }}
+{% if bu_node_rpc_server.split.connect %}
+{% for node in bu_node_rpc_server.split.connect %}
+rpcconnect={{ node }}
+{% endfor %}
+{% endif %}

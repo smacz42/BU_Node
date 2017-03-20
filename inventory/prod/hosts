@@ -1,0 +1,11 @@
+# This is inventory file for prodstage
+
+[webservers]
+bu-node.hobbithole
+
+[nodes]
+bu-node.hobbithole
+
+[all:vars]
+# Sets the environment to development(dev) or production (prod)
+network=prod

@@ -1,0 +1,10 @@
+---
+# Tasks for IPTables
+
+- include: iptables_install.yml
+  tags: [iptables,iptables_install,install]
+- include: iptables_config.yml
+  tags: [iptables,iptables_config,config]
+
+  #vars_files:
+    #- "vars/{{ ansible_os_family }}.yml"

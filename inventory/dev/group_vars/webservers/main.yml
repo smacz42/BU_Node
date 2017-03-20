@@ -1,0 +1,87 @@
+---
+################################################################################### httpd
+
+httpd_webservice: 'bu-node'
+
+httpd_ServerAdmin: andrewcz@neomailbox.net
+
+httpd_LoadModules:
+  - alias
+  - dir
+  - logio
+  - log_config
+  - rewrite
+  - wsgi
+
+httpd_LogLevel: 'info'
+
+httpd_DocumentRoot: '/srv/httpd'
+
+################################################################################### Webpage Customizations
+
+# Title in the tab and that is displayed in reference to the window itself
+bu_node_page_title: 'AndrewCz - Bitcoin Node Stats'
+bu_node_navbar_brand: 'AndrewCz'
+bu_node_default_interval: '1'
+bu_node_custom_subdir: ''
+
+################################################################################### Bitcoin.conf config file
+
+bu_node_rpc_server:
+  # tells Bitcoin-Qt and bitcoind to accept JSON-RPC commands
+  active: True
+  # Bind to given address to listen for JSON-RPC connections. Use [host]:port notation for IPv6.
+  # This option can be specified multiple times (default: bind to all interfaces)
+  # or False
+  bind:
+    - { ip: 127.0.0.1, port: 8332 }
+  # You must set rpcuser and rpcpassword to secure the JSON-RPC api
+  user: Thrawn
+  password: "{{ vault_bu_node_rpc_server_password }}"
+  # How many seconds bitcoin will wait for a complete RPC HTTP request.
+  # after the HTTP connection is established. 
+  timeout: 30
+  # Settings for splitting the webserver and/or multiple nodes
+  split:
+    active: True
+    # Specify as many rpcallowip= settings as you like to allow connections from other hosts,
+    # either as a single IPv4/IPv6 or with a subnet specification.
+    # False or Suggestions:
+    #   - {{ hosts.webservers['0'].ip_addr }}
+    allowip: False
+  # You can use Bitcoin or bitcoind to send commands to Bitcoin/bitcoind
+  # running on another host using this option:
+  # False or list of ip addresses
+    connect:
+      - '192.168.3.142'
+
+#
+# Transaction Fee Changes in 0.10.0
+#
+
+# Send transactions as zero-fee transactions if possible (default: 0)
+bu_node_sendfreetransactions: False
+
+# Create transactions that have enough fees (or priority) so they are likely to begin confirmation within n blocks (default: 1).
+#
+################################################################################### iptables
+
+iptables_filter_rules:
+  - chain: input
+    comment: OpenSSH 22/tcp
+    source_address: 0.0.0.0/0
+    destination_port: 22
+    protocol: tcp
+    target: accept
+  - chain: input
+    comment: HTTP 80/tcp
+    source_address: 0.0.0.0/0
+    destination_port: 80
+    protocol: tcp
+    target: accept
+  - chain: input
+    comment: HTTPS 443/tcp
+    source_address: 0.0.0.0/0
+    destination_port: 443
+    protocol: tcp
+    target: accept

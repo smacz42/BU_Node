@@ -1,0 +1,14 @@
+---
+# Tasks for bu_node_config_nodes
+
+- name: (bu_node_config_nodes) [1/2] Template bitcoin.conf is deployed
+  template:
+    src: ../templates/bitcoin.conf.j2
+    dest: /home/bitcoin/.bitcoin/bitcoin.conf
+  notify: Restart bitcoind
+
+- name: (bu_node_config_nodes) [2/2] File /etc/systemd/system/bitcoind.service is deployed
+  synchronize:
+    src: ../files/bitcoind.service
+    dest: /etc/systemd/system/bitcoind.service
+  notify: Restart bitcoind

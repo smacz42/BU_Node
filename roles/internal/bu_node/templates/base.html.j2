@@ -1,0 +1,73 @@
+{% raw %}
+<!DOCTYPE html>
+
+{% load staticfiles %}
+{% load bootstrap3 %}
+
+<html>
+
+<head>
+
+  <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{% endraw %}{{ bu_node_page_title }}{% raw %}</title>
+
+  {# Load CSS and JavaScript #}
+  {% bootstrap_css %}
+  <link rel="stylesheet" href="{% static 'css/custom.css' %}" type="text/css">
+
+  <script src="{% bootstrap_jquery_url %}" type="text/javascript"></script>
+  {% bootstrap_javascript %}
+  <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+  <!-- Include Date Range Picker -->
+  <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+
+  {% block headcontent %}{% endblock %}
+
+</head>
+
+
+<body>
+  <!-- navbar -->
+  <div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">{% endraw %}{{ bu_node_navbar_brand }}{% raw %}</a>
+      </div>
+
+      <div class="navbar-collapse collapse navbar-responsive-collapse">
+        <ul class="nav navbar-nav">
+          <li>
+            <!--<a href="/plots/">Plots</a>-->
+          </li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/">node {{ node.version }} ({{ node.subversion }})</a></li>
+          <li><a href="https://github.com/bartromgens/bitcoinnodestats">Code</a></li>
+        {% if request.user.is_authenticated %}
+          <!--<li><a>{{ request.user.username }}</a></li>-->
+          {% if request.user.is_staff %}
+          <li><a href="/admin" target="_blank">Admin</a></li>
+          {% endif %}
+        {% endif %}
+
+        </ul>
+      </div>
+      <!--/.nav-collapse -->
+    </div>
+  </div>
+
+  {% block content %}{% endblock %}
+
+</body>
+
+</html>
+{% endraw %}

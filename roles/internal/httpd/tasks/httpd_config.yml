@@ -1,0 +1,60 @@
+---
+# Post-installation configuration of the apache webserver
+
+  #- name: Standard welcome page is removed
+
+  #- name: Apache is chrooted
+
+- name: (httpd_config) [1/6] Apache main config file is deployed
+  template:
+    src: httpd.conf.j2
+    dest: "{{ httpd_config_file }}"
+    owner: root
+    group: root
+    setype: httpd_config_t
+    mode: 0644
+  notify: Restart httpd
+
+- name: (httpd_config) [2/6] Custom httpd dir is present
+  file:
+    path: "{{ httpd_ServerRoot }}/{{ httpd_webservice }}.d"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: (httpd_config) [3/6] Custom HTTP config file is deployed
+  template:
+    src: "../templates/{{ httpd_webservice }}.conf.j2"
+    dest: "/etc/httpd/{{ httpd_webservice }}.d/{{ httpd_webservice }}.conf"
+    owner: apache
+    group: apache
+    mode: 0644
+  when: httpd_webservice is defined
+  notify: Restart httpd
+
+- name: (httpd_config) [4/6] Custom HTTPS/SSL config file is deployed
+  template:
+    src: "../templates/{{ httpd_webservice}}_ssl.conf.j2"
+    dest: "/etc/httpd/{{ httpd_webservice }}.d/{{ httpd_webservice }}_ssl.conf"
+    owner: apache
+    group: apache
+    mode: 0644
+  when: httpd_webservice is defined
+  notify: Restart httpd
+
+- name: (httpd_config) [5/6] Cert file has correct permissions
+  file:
+    path: "{{ httpd_SSLCertificateFile }}"
+    owner: root
+    group: apache
+    mode: 0440
+  notify: Restart httpd
+
+- name: (httpd_config) [6/6] Cert key file has correct permissions
+  file:
+    path: "{{ httpd_SSLCertificateKeyFile }}"
+    owner: root
+    group: apache
+    mode: 0400
+  notify: Restart httpd

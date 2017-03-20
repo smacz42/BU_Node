@@ -1,0 +1,59 @@
+---
+# Config the common things
+
+- name: (common_config) [1/7] Register public IP address to 'public_ip'
+  shell: "dig +short myip.opendns.com @resolver1.opendns.com"
+  register: public_ip
+
+- name: (common_config) [2/7] MOTD is Ansiblized
+  template:
+    src: "../templates/yoda.j2"
+    dest: "/etc/motd"
+    owner: root
+    group: root
+    mode: 0440
+
+- name: (common_config) [3/7] Fail2ban config file is setup
+  template:
+    src: ../templates/jail.conf.j2
+    dest: /etc/fail2ban/jail.local
+  notify: Restart Fail2ban
+
+- name: (common_config) [4/7] Yum-cron config file
+  template:
+    src: "../templates/yum-cron.conf.j2"
+    dest: "/etc/yum/yum-cron.conf"
+  notify: Restart yum-cron
+
+- name: (common_config) [5/7] File /etc/rsyslog.conf deployed
+  template:
+    src: ../templates/rsyslog.conf.j2
+    dest: /etc/rsyslog.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart rsyslog
+
+- name: (common_config) [6/7] File /etc/rsyslog.d/listen.conf deployed
+  template:
+    src: ../templates/listen.conf.j2
+    dest: /etc/rsyslog.d/listen.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart rsyslog
+
+    #- name: Dotfiles are deployed
+    #  copy:
+    #    src: ../files/dotfiles/
+    #    dest: ~/
+    #    owner: "{{ remote_user }}"
+    #    group: "{{ remote_user }}"
+    #
+    #- name: User's current shell is zsh
+    #  user:
+    #    name: "{{ remote_user }}"
+    #    shell: /bin/zsh
+
+- name: (common_config) [7/7] Update plugins with Vundle
+  command: vim +PluginInstall +qall

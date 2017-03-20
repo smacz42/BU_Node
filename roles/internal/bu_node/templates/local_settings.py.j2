@@ -1,0 +1,15 @@
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DEBUG = {{ bu_node_stats_debug }}
+SECRET_KEY = '{{ bu_node_stats_secret_key }}'
+ALLOWED_HOSTS = [{% for host in bu_node_stats_allowed_hosts %}'{{ host }}'{% if not loop.last %}, {% endif %}{% endfor %}]
+TIME_ZONE = '{{ bu_node_stats_timezone }}'
+STATIC_ROOT = {{ bu_node_stats_static_root }}
+STATIC_URL = '{% if bu_node_custom_subdir %}/{{ bu_node_custom_subdir }}{% endif %}/static/'
+MEDIA_ROOT = {{ bu_node_stats_media_root }}
+MEDIA_URL = '{% if bu_node_custom_subdir %}/{{ bu_node_custom_subdir }}{% endif %}/static/media/'
+BITCOIN_CONF_FILE = '{{ bu_node_stats_bitcoin_conf_file }}'
+ADMINS = (
+    ('{{ bu_node_stats_admin.name }}', '{{ bu_node_stats_admin.email }}'),
+)

@@ -1,0 +1,31 @@
+---
+# Handler actions. This is typically a restart of a service.
+
+- name: Restart bitcoind
+  systemd:
+    name: bitcoind
+    state: restarted
+    daemon_reload: yes
+
+- name: Restart httpd
+  service:
+    name: httpd
+    state: restarted
+
+- name: Remove gcc
+  package:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - gcc
+    - cpp
+    - glibc-devel
+    - glibc-headers
+    - kernel-headers
+    - libmpc
+    - mpfr
+
+- name: stop ip6tables
+  service:
+    name: ip6tables
+    state: stopped

@@ -1,0 +1,7 @@
+---
+# Handler actions
+
+- name: Restart httpd
+  service:
+    name: httpd
+    state: restarted

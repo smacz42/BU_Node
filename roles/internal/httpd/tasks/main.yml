@@ -1,0 +1,7 @@
+---
+# The Apache webserver
+
+- include: httpd_install.yml
+  tags: [httpd,httpd_install,install]
+- include: httpd_config.yml
+  tags: [httpd,httpd_config,config]

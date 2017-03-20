@@ -1,0 +1,68 @@
+
+iptables_filter_rules:
+  - chain: input
+    comment: OpenSSH 22/tcp
+    source_address: 0.0.0.0/0
+    destination_port: 22
+    protocol: tcp
+    target: accept
+  - chain: input
+    comment: Bitcoin 8333/tcp
+    source_address: 0.0.0.0/0
+    destination_port: 8333
+    protocol: tcp
+    target: accept
+  - chain: input
+    comment: Bitcoin 8332/tcp
+    source_address: 0.0.0.0/0
+    destination_port: 8332
+    protocol: tcp
+    target: accept
+
+
+################################################################################### Bitcoin.conf config file
+
+#
+# Network-related settings
+#
+
+# Listening mode, enabled by default except when 'connect' is being used
+bu_node_listen: True
+
+# Run on the test network instead of the real bitcoin network.
+bu_node_testnet: True
+
+#
+# JSON-RPC options (for controlling a running Bitcoin/bitcoind process)
+#
+
+# By default, only RPC connections from localhost are allowed.
+# NOTE: opening up the RPC port to hosts outside your local trusted network is NOT RECOMMENDED,
+# because the rpcpassword is transmitted over the network unencrypted.
+bu_node_rpc_server:
+  # tells Bitcoin-Qt and bitcoind to accept JSON-RPC commands
+  active: True
+  # Bind to given address to listen for JSON-RPC connections. Use [host]:port notation for IPv6.
+  # This option can be specified multiple times (default: bind to all interfaces)
+  # or False
+  bind:
+  - { ip: 0.0.0.0, port: 8332 }
+  # You must set rpcuser and rpcpassword to secure the JSON-RPC api
+  user: Thrawn
+  password: "{{ vault_bu_node_rpc_server_password }}"
+  # How many seconds bitcoin will wait for a complete RPC HTTP request.
+  # after the HTTP connection is established. 
+  timeout: 30
+  # Settings for splitting the webserver and/or multiple nodes
+  split:
+    active: True
+    # Specify as many rpcallowip= settings as you like to allow connections from other hosts,
+    # either as a single IPv4/IPv6 or with a subnet specification.
+    # Suggestions:
+    #   - {{ hosts.webservers['0'].ip_addr }}
+    allowip:
+      - '192.168.3.142'
+      - '192.168.3.141'
+  # You can use Bitcoin or bitcoind to send commands to Bitcoin/bitcoind
+  # running on another host using this option:
+    connect: False

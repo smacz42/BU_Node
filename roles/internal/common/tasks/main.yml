@@ -1,0 +1,7 @@
+---
+
+- include: common_install.yml
+  tags: [common,common_install,install]
+
+- include: common_config.yml
+  tags: [common,common_config,config]

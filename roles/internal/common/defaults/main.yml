@@ -1,0 +1,273 @@
+---
+
+################################################################################### SANE DEFAULTS
+## MOTD
+
+# Default information
+motd_info__default:
+  - " FQDN:       ": "{{ ansible_fqdn }}\n"
+  - " Distro:     ": "{{ ansible_distribution }} {{ ansible_distribution_version }} {{ ansible_distribution_release }}"
+    #- " SELinux:    ": "{{ ansible_selinux.status }}\n"
+  - " Virtual:    ": "{{ 'YES' if ansible_virtualization_role == 'guest' else 'NO' }}"
+  - " CPUs:       ": "{{ ansible_processor_vcpus }}"
+  - " RAM:        ": "{{ (ansible_memtotal_mb / 1000) | round(1) }} GB"
+  - " Disk Size:  ": "{{ ansible_mounts[0].device }} {{ ansible_mounts[0].size_available / 1000 }}\n"
+  - " Local IP:   ": "{{ ansible_default_ipv4.address }}"
+  - " Nameserver: ": "{{ ansible_dns.nameservers[0] }}"
+  - " Public IP:  ": "{{ public_ip.stdout }}\n"
+  - " You are:    ": "{{ ansible_env.SSH_CLIENT.split()[0] }}"
+  - " Running:    ": "{{ ansible_env.SHELL }}"
+
+# Custom information to show under the ASCII art
+motd_info__custom: []
+
+# Final information to show under the ASCII art
+motd_info: "{{
+  motd_info__default +
+  motd_info__custom
+}}"
+
+extra_progs:
+  - git
+  - htop
+  - nmap
+  - rsync
+  - tmux
+  - vim
+  - weechat
+  - wget
+  - zsh
+  - bind-utils
+  - whois
+  - fail2ban
+  - yum-cron
+  - rsyslog
+  - curl
+  - policycoreutils
+  - net-tools
+  - util-linux
+  - postfix
+  - iftop
+
+extra_services:
+  - fail2ban
+  - yum-cron
+  - rsyslog
+
+###################################################################### Commands
+
+
+#  What kind of update to use:
+# default                            = yum upgrade
+# security                           = yum --security upgrade
+# security-severity:Critical         = yum --sec-severity=Critical upgrade
+# minimal                            = yum --bugfix update-minimal
+# minimal-security                   = yum --security update-minimal
+# minimal-security-severity:Critical =  --sec-severity=Critical update-minimal
+yum_cron_update_cmd: default
+
+# Whether a message should be emitted when updates are available,
+# were downloaded, or applied.
+# default: yes
+yum_cron_update_messages: yes
+
+# Whether updates should be downloaded when they are available.
+# default: yes
+yum_cron_download_updates: yes
+
+# Whether updates should be applied when they are available.  Note
+# that download_updates must also be yes for the update to be applied.
+# default: no
+yum_cron_apply_updates: no
+
+# Maximum amout of time to randomly sleep, in minutes.  The program
+# will sleep for a random amount of time between 0 and random_sleep
+# minutes before running.  This is useful for e.g. staggering the
+# times that multiple systems will access update servers.  If
+# random_sleep is 0 or negative, the program will run immediately.
+# default: 360 (6*60)
+yum_cron_random_sleep: 360
+
+
+######################################################################## Emitters
+
+
+# Name to use for this system in messages that are emitted.  If
+# system_name is None, the hostname will be used.
+# default: None
+yum_cron_system_name: None
+
+# How to send messages.  Valid options are stdio and email.  If
+# emit_via includes stdio, messages will be sent to stdout; this is useful
+# to have cron send the messages.  If emit_via includes email, this
+# program will send email itself according to the configured options.
+# If emit_via is None or left blank, no messages will be sent.
+# default: stdio
+yum_cron_emit_via: stdio
+
+# The width, in characters, that messages that are emitted should be
+# formatted to.
+yum_cron_output_width: 80
+
+#################################################################### Email
+
+# The address to send email messages from.
+# default: root@localhost
+yum_cron_email_from: root@localhost
+
+# List of addresses to send messages to.
+# default: root
+yum_cron_email_to: root
+
+# Name of the host to connect to to send email messages.
+# default: localhost
+yum_cron_email_host: localhost
+
+##################################################################### Groups
+# NOTE: This only works when group_command != objects, which is now the default
+
+# List of groups to update
+# default: None
+yum_cron_group_list: None
+
+# The types of group packages to install
+# default: "mandatory, default"
+yum_cron_group_package_types: "mandatory, default"
+
+#################################################################### Base
+# This section overrides yum.conf
+
+# Use this to filter Yum core messages
+# -4: critical
+# -3: critical+errors
+# -2: critical+errors+warnings
+# default: -2
+yum_cron_debuglevel: -2
+
+# default: False
+yum_cron_skip_broken: False
+
+#default: group:main
+yum_cron_mdpolicy: group:main
+
+# Auto-import new gpg keys (dangerous)
+# default: False
+yum_cron_assumeyes: False
+
+################################################################# listen.conf
+
+# SystemLogSocketName - Do not change unless you're sure
+# that you know what you're doing - 'cause I sure don't!
+rsyslog_client_systemlogsocketname: "/run/systemd/journal/syslog"
+
+################################################################# rsyslog.conf
+# For more information see /usr/share/doc/rsyslog-*/rsyslog_conf.html
+# If you experience problems, see http://www.rsyslog.com/doc/troubleshoot.html
+
+######################################################################### Modules
+
+# The imjournal module is now used as a message source instead of imuxsock.
+# defaults:
+  # imjournal # provides access to the systemd journal
+  # imuxsock # provides support for local system logging (e.g. via logger command)
+# additionally available:
+  # imklog # reads kernel messages (the same are read from journald)
+  # immark # provides --MARK-- message capability
+  # imudp # Provides UDP syslog reception
+  # imtcp # Provides TCP syslog reception
+rsyslog_client_modload:
+  - imuxsock
+  - imkjournal
+
+# port number for module 'imudp' if used
+# default: 514
+rsyslog_client_udpserverrun: 514
+
+# counterpart to module 'imtcp' if used
+# default: 514
+rsyslog_client_inputtcpserverrun: 514
+
+###################################################################### Global Directives
+
+# Where to place auxiliary files
+# default: /var/lib/rsyslog
+rsyslog_client_work_directory: "/var/lib/rsyslog"
+
+# Use default timestamp format
+# default: RSYSLOG_TraditionalFileFormat
+rsyslog_client_action_file_default_template: RSYSLOG_TraditionalFileFormat
+
+# File syncing capability is disabled by default. This feature is usually not required,
+# not useful and an extreme performance hit
+# default: off
+rsyslog_client_action_file_enable_sync: off
+
+# Include all config files in /etc/rsyslog.d/
+rsyslog_client_include_config: "/etc/rsyslog.d/*.conf"
+
+# Turn off message reception via local log socket;
+# local messages are retrieved through imjournal now.
+# default: on
+rsyslog_client_omit_local_logging: on
+
+# File to store the position in the journal
+# default: imjournal.state
+rsyslog_client_imjournal_state_file: imjournal.state
+
+########################################################################## Rules
+
+rsyslog_client_rules:
+  # Log all kernel messages to the console.
+  # Logging much else clutters up the screen.
+  # default: none
+  # optional: "kern.*"
+  - console:
+    file: "/dev/console"
+    alerts:
+      - "#kern.*"
+  # Log anything (except mail) of level info or higher.
+  # Don't log private authentication messages!
+  # default "*.info;mail.none;authpriv.none;cron.none"
+  - messages:
+    file: "/var/log/messages"
+    alerts:
+    - "*.info"
+    - "mail.none"
+    - "authpriv.none"
+    - "cron.none"
+  # The authpriv file has restricted access.
+  # default: authpriv.*
+  - secure:
+    file: "/var/log/secure"
+    alerts:
+      - "authpriv.*"
+  # Log all the mail messages in one place.
+  # default: mail.*
+  - maillog:
+    file: "/var/log/maillog"
+    alerts:
+      - "mail.*"
+  # Log cron stuff
+  # default: cron.*
+  - cron:
+    file: "/var/log/cron"
+    alerts:
+      - "cron.*"
+  # Everybody gets emergency messages
+  # default: *.emerg
+  - emergency:
+    file: ":omusrmsg:*"
+    alerts:
+      - "*.emerg"
+  # Save news errors of level crit and higher in a special file.
+  # default: uucp,news.crit
+  - spooler:
+    file: "/var/log/spooler"
+    alerts:
+      - "uucp,news.crit"
+  # Save boot messages also to boot.log
+  # default: local7.*
+  - boot:
+    file: "/var/log/boot.log"
+    alerts:
+      - "local7.*"

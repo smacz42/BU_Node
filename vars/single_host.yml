@@ -1,0 +1,61 @@
+---
+
+iptables_filter_rules:
+  - chain: input
+    comment: OpenSSH 22/tcp
+    source_address: 0.0.0.0/0
+    destination_port: 22
+    protocol: tcp
+    target: accept
+  - chain: input
+    comment: HTTP 80/tcp
+    source_address: 0.0.0.0/0
+    destination_port: 80
+    protocol: tcp
+    target: accept
+  - chain: input
+    comment: HTTPS 443/tcp
+    source_address: 0.0.0.0/0
+    destination_port: 443
+    protocol: tcp
+    target: accept
+  - chain: input
+    comment: Bitcoin 8332/tcp
+    source_address: 0.0.0.0/0
+    destination_port: 8332
+    protocol: tcp
+    target: accept
+  - chain: input
+    comment: Bitcoin 8333/tcp
+    source_address: 0.0.0.0/0
+    destination_port: 8333
+    protocol: tcp
+    target: accept
+
+bu_node_rpc_server:
+  # tells Bitcoin-Qt and bitcoind to accept JSON-RPC commands
+  active: True
+  # Bind to given address to listen for JSON-RPC connections. Use [host]:port notation for IPv6.
+  # This option can be specified multiple times (default: bind to all interfaces)
+  # or False
+  bind:
+  - { ip: 127.0.0.1, port: 8332 }
+  # You must set rpcuser and rpcpassword to secure the JSON-RPC api
+  user: Thrawn
+  password: "{{ vault_bu_node_rpc_server_password }}"
+  # How many seconds bitcoin will wait for a complete RPC HTTP request.
+  # after the HTTP connection is established. 
+  timeout: 30
+  # Settings for splitting the webserver and/or multiple nodes
+  split:
+    active: True
+    # Specify as many rpcallowip= settings as you like to allow connections from other hosts,
+    # either as a single IPv4/IPv6 or with a subnet specification.
+    # Since this is a single, I would suggest keeping this at 127.0.0.1
+    allowip:
+      - '127.0.0.1'
+  # You can use Bitcoin or bitcoind to send commands to Bitcoin/bitcoind
+  # running on another host using this option:
+    # Since this is a single, I would suggest keeping this at 127.0.0.1
+    connect:
+      - '127.0.0.1'

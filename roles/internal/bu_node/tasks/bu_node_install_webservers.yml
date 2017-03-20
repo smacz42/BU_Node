@@ -1,0 +1,52 @@
+---
+# Tasks for bu-node_install_webservers
+
+- name: (bu_node_install_webservers) [1/6] bu_node_webservers specific programs are installed
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - python34
+    - python34-devel
+    - python34-pip
+    - httpd-devel
+    - gcc
+  notify: Remove gcc
+
+- name: (bu_node_install_webservers) [2/6] Install python3 versions of specific programs using pip3
+  pip:
+    name: "{{ item }}"
+    executable: pip3
+  with_items:
+    - "virtualenv"
+    - "mod_wsgi"
+
+- name: (bu_node_install_webservers) [3/6] Bitcoin conf dirs are present
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.user }}"
+    group: "{{ item.user }}"
+  with_items:
+    - { path: '/srv/httpd/', user: apache }
+    - { path: '/root/.bitcoin', user: root }
+
+- name: (bu_node_install_webservers) [4/6] BitcoinNodeStats is cloned
+  git:
+    repo: https://github.com/bartromgens/bitcoinnodestats
+    dest: "{{ bu_node_root_dir }}"
+    update: no
+
+- name: (bu_node_install_webservers) [5/6] Virtualenv is created
+  pip:
+    virtualenv: "{{ bu_node_root_dir }}/env"
+    virtualenv_python: python3
+    chdir: "{{ bu_node_root_dir }}"
+    requirements: "{{ bu_node_root_dir}}/requirements.txt"
+    virtualenv_site_packages: yes
+
+- name: (bu_node_install_webservers) [6/6] Virtualenv local_settings.py is generated
+  command: "{{ bu_node_root_dir }}/env/bin/python {{ bu_node_root_dir }}/create_local_settings.py"
+  args:
+    chdir: "{{ bu_node_root_dir }}"
+    creates: "{{ bu_node_root_dir }}/{{ httpd_webservice }}/local_settings.py"

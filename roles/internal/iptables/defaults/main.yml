@@ -1,0 +1,34 @@
+---
+
+################################################################################### CHANGE ME
+
+iptables_filter_rules:
+  - chain: input
+    comment: OpenSSH 22/tcp
+    source_address: 0.0.0.0/0
+    destination_port: 22
+    protocol: tcp
+    target: accept
+
+################################################################################### SANE DEFAULTS
+
+iptables_filter_input_policy: drop
+iptables_filter_forward_policy: drop
+iptables_filter_output_policy: accept
+
+iptables_nat_prerouting_policy: accept
+iptables_nat_input_policy: accept
+iptables_nat_output_policy: accept
+iptables_nat_postrouting_policy: accept
+
+iptables_nat_rules: []
+
+ip6tables_filter_input_policy: drop
+ip6tables_filter_forward_policy: drop
+ip6tables_filter_output_policy: accept
+
+ip6tables_nat_prerouting_policy: accept
+ip6tables_nat_input_policy: accept
+ip6tables_nat_output_policy: accept
+ip6tables_nat_postrouting_policy: accept
+

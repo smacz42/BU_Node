@@ -1,0 +1,45 @@
+# {{ ansible_managed }}
+
+{% for item in rsyslog_client_modload %}
+$ModLoad {{ item }}
+{% endfor %}
+
+{% if 'imudp' in rsyslog_client_modload %}
+$UDPServerRun 514
+{% endif %}
+{% if 'imtcp' in rsyslog_client_modload %}
+$InputTCPServerRun 514
+{% endif %}
+
+######################################################## GLOBAL DIRECTIVES
+
+$WorkDirectory {{ rsyslog_client_work_directory }}
+$ActionFileDefaultTemplate {{ rsyslog_client_action_file_default_template }}
+$ActionFileEnableSync {{ rsyslog_client_action_file_enable_sync }}
+$IncludeConfig {{ rsyslog_client_include_config }}
+$OmitLocalLogging {{ rsyslog_client_omit_local_logging }}
+$IMJournalStateFile {{ rsyslog_client_imjournal_state_file }}
+
+
+################################################################# RULES
+
+{% for file in rsyslog_client_rules %}
+{% for alert in file['alerts'] %}{{ alert}}{% if not loop.last %};{% endif %}{% endfor %} {{ file['file']}}
+{% endfor %}
+
+# ### begin forwarding rule ###
+# The statement between the begin ... end define a SINGLE forwarding
+# rule. They belong together, do NOT split them. If you create multiple
+# forwarding rules, duplicate the whole block!
+# Remote Logging (we use TCP for reliable delivery)
+#
+# An on-disk queue is created for this action. If the remote host is
+# down, messages are spooled to disk and sent when it is up again.
+#$ActionQueueFileName fwdRule1 # unique name prefix for spool files
+#$ActionQueueMaxDiskSpace 1g   # 1gb space limit (use as much as possible)
+#$ActionQueueSaveOnShutdown on # save messages to disk on shutdown
+#$ActionQueueType LinkedList   # run asynchronously
+#$ActionResumeRetryCount -1    # infinite retries if host is down
+# remote host is: name/ip:port, e.g. 192.168.0.1:514, port optional
+#*.* @@remote-host:514
+# ### end of the forwarding rule ###

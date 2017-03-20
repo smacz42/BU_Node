@@ -1,0 +1,13 @@
+---
+# Handler actions. This is typically a restart of a service.
+
+- name: Restart iptables
+  service:
+    name: "{{ iptables_service_name }}"
+    state: restarted
+
+- name: Restart ip6tables
+  service:
+    name: "{{ ip6tables_service_name }}"
+    state: restarted
+

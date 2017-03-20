@@ -1,0 +1,51 @@
+---
+# For use on Arch Linux
+ansible_python_interpreter: /usr/bin/python2
+
+########################################################## HTTPD
+
+bu_node_root_dir: '/srv/httpd/bitcoinnodestats'
+httpd_webservice: 'bu-node'
+
+httpd_ServerAdmin: andrewcz@neomailbox.net
+
+httpd_LoadModules:
+  - alias
+  - dir
+  - logio
+  - log_config
+  - rewrite
+  - wsgi
+
+httpd_LogLevel: 'info'
+
+httpd_DocumentRoot: '/srv/httpd'
+# SANE DEFAULTS
+
+########################################################## IPTables
+
+iptables_filter_rules:
+  - chain: input
+    comment: OpenSSH 22/tcp
+    source_address: 0.0.0.0/0
+    destination_port: 22
+    protocol: tcp
+    target: accept
+  - chain: input
+    comment: HTTP 80/tcp
+    source_address: 0.0.0.0/0
+    destination_port: 80
+    protocol: tcp
+    target: accept
+  - chain: input
+    comment: HTTPS 443/tcp
+    source_address: 0.0.0.0/0
+    destination_port: 443
+    protocol: tcp
+    target: accept
+  - chain: input
+    comment: Bitcoin 8333/tcp
+    source_address: 0.0.0.0/0
+    destination_port: 8333
+    protocol: tcp
+    target: accept

@@ -1,0 +1,69 @@
+## {{ ansible_managed }}
+
+{% if bu_node_testnet %}
+testnet=1
+{% endif %}
+{% if bu_node_regtest %}
+regtest=1
+{% endif %}
+{% if bu_node_proxy %}
+proxy={{ bu_node_proxy.ip }}:{{ bu_node_proxy.port }}
+{% endif %}
+{% if bu_node_bind %}
+bind={{ bu_node_bind }}
+{% endif %}
+{% if bu_node_bind %}
+whitebind=<addr>
+{% endif %}
+{% if bu_node_addnodes %}
+{% for node in bu_node_addnodes %}
+addnode={{ node.ip }}:{{ node.port }}
+{% endfor %}
+{% endif %}
+{% if bu_node_connects %}
+{% for node in bu_node_connects %}
+connect={{ node.ip }}:{{ node.port }}
+{% endfor %}
+{% endif %}
+{% if bu_node_listen %}
+listen=1
+{% endif %}
+maxconnections={{ bu_node_maxconnections }}
+
+{% if bu_node_rpc_server.active %}
+server=1
+{% for node in bu_node_rpc_server.bind %}
+rpcbind={{ node.ip }}:{{ node.port }}
+{% endfor %}
+rpcuser={{ bu_node_rpc_server.user }}
+rpcpassword={{  bu_node_rpc_server.password }}
+rpcclienttimeout={{ bu_node_rpc_server.timeout }}
+
+{% if bu_node_rpc_server.split.active %}
+{% if bu_node_rpc_server.split.allowip %}
+{% for addr in bu_node_rpc_server.split.allowip %}
+rpcallowip={{ addr }}
+{% endfor %}
+{% endif %}
+{% if bu_node_rpc_server.split.connect %}
+{% for node in  bu_node_rpc_server.split.connect %}
+rpcconnect={{ node }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endif %}
+
+{% if bu_node_sendfreetransactions %}
+sendfreetransactions=1
+{% endif %}
+txconfirmtarget={{ bu_node_txconfirmtarget }}
+keypool={{ bu_node_keypool }}
+{% if bu_node_paytxfee %}
+paytxfee={{ bu_node_paytxfee }}
+{% endif %}
+{% if bu_node_min %}
+min=1
+{% endif %}
+{% if bu_node_minimizetotray %}
+minimizetotray=1
+{% endif %}
