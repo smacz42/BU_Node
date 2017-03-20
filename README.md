@@ -26,6 +26,10 @@ ATM this Playbook has all necessary roles included inside of `roles/internal`. (
 
 # Variables
 
+## Testnet
+
+This Playbook allows running on both the testnet and the mainnet. This is governed by the `bu_node_testnet` variable. Change this to `False` to run on the mainnet.
+
 ## Binary Downloads
 
 This Playbook assumes that the latest binary release is bitcoinUnlimited-1.0.1.1, and that it is being run on a 64-bit base image. During testing, [BitcoinUnlimited.info](https://www.bitcoinunlimited.info/) came under a DDoS attack, and I was informed that the tarball of the binaries could also be found at their [github repo](https://github.com/BitcoinUnlimited/BitcoinUnlimitedWebDownloads). So in this Playbook we look to both of them in turn, only failing if both of them are unreachable.
