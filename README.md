@@ -11,6 +11,12 @@ $ git clone https://github.com/smacz42/BU_Node && cd BU_Node
 $ ansible-playbook site.yml -i inventory/dev --vault-password-file=../vault_pass.txt
 ```
 
+See below for details about the 'vault'.
+
+## Operating System
+
+This has only been tested on CentOS7 x86_64.
+
 # Roles
 
 ## Required Roles
@@ -30,6 +36,10 @@ ATM this Playbook has all necessary roles included inside of `roles/internal`. (
 
 This Playbook allows running on both the testnet and the mainnet. This is governed by the `bu_node_testnet` variable. Change this to `False` to run on the mainnet.
 
+## Custom Subdirectory
+
+This Playbook allows the web service to reside on a custom subdirectory of a webpage. This is set by the `bu_node_custom_subdir` variable.
+
 ## Binary Downloads
 
 This Playbook assumes that the latest binary release is bitcoinUnlimited-1.0.1.1, and that it is being run on a 64-bit base image. During testing, [BitcoinUnlimited.info](https://www.bitcoinunlimited.info/) came under a DDoS attack, and I was informed that the tarball of the binaries could also be found at their [github repo](https://github.com/BitcoinUnlimited/BitcoinUnlimitedWebDownloads). So in this Playbook we look to both of them in turn, only failing if both of them are unreachable.
@@ -43,7 +53,10 @@ The password itself is stored in the vault.yml, however, the password file is no
 * `ansible-vault edit inventory/dev/group_vars/all/vault.yml --vault-password-file=../vault_pass.txt`
 * `ansible-playbook site.yml --vault-password-file=../vault_pass.txt`
 
-Currently the only variable required in the vault is `vault_bu_node_rpc_server_password`
+Currently the variables required in the vault are:
+
+* `vault_bu_node_rpc_server_password`
+* `vault_bu_node_stats_secret_key`
 
 ## Splitting the Webserver and the Full Node
 
@@ -57,6 +70,8 @@ vars_files:
 ```
 
 Then, go into the inventory's `group_vars` and adjust the IP address variables under `bu_node_rpc_server` accordingly. Finally set the hostnames under `bu_nodes` and `webservers` accordingly.
+
+Right now, `inventory/prod` is configured to be a single host setup, and the `inventory/dev` is configured to be a multi-host setup.
 
 # Network
 

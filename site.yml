@@ -7,8 +7,8 @@
   gather_facts: true
   remote_user: root
   #no_log: true
-  #vars_files:
-  #  - vars/single_host.yml
+  vars_files:
+    - vars/single_host.yml
 
   roles:
     - { role: common }
