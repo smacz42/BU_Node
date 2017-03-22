@@ -19,22 +19,22 @@
         "root": "/dev/mapper/cl_bu--node-root"
     }, 
     "ansible_date_time": {
-        "date": "2017-03-20", 
-        "day": "20", 
-        "epoch": "1490063736", 
-        "hour": "22", 
-        "iso8601": "2017-03-21T02:35:36Z", 
-        "iso8601_basic": "20170320T223536796253", 
-        "iso8601_basic_short": "20170320T223536", 
-        "iso8601_micro": "2017-03-21T02:35:36.796503Z", 
-        "minute": "35", 
+        "date": "2017-03-22", 
+        "day": "22", 
+        "epoch": "1490200029", 
+        "hour": "12", 
+        "iso8601": "2017-03-22T16:27:09Z", 
+        "iso8601_basic": "20170322T122709552485", 
+        "iso8601_basic_short": "20170322T122709", 
+        "iso8601_micro": "2017-03-22T16:27:09.552876Z", 
+        "minute": "27", 
         "month": "03", 
-        "second": "36", 
-        "time": "22:35:36", 
+        "second": "09", 
+        "time": "12:27:09", 
         "tz": "EDT", 
         "tz_offset": "-0400", 
-        "weekday": "Monday", 
-        "weekday_number": "1", 
+        "weekday": "Wednesday", 
+        "weekday_number": "3", 
         "weeknumber": "12", 
         "year": "2017"
     }, 
@@ -202,14 +202,14 @@
         "PWD": "/root", 
         "SHELL": "/bin/bash", 
         "SHLVL": "2", 
-        "SSH_CLIENT": "192.168.1.50 42724 22", 
-        "SSH_CONNECTION": "192.168.1.50 42724 192.168.1.156 22", 
+        "SSH_CLIENT": "192.168.1.50 39340 22", 
+        "SSH_CONNECTION": "192.168.1.50 39340 192.168.1.156 22", 
         "SSH_TTY": "/dev/pts/0", 
         "TERM": "screen-256color", 
         "USER": "root", 
         "VIRTUALENVWRAPPER_SCRIPT": "/usr/bin/virtualenvwrapper.sh", 
         "XDG_RUNTIME_DIR": "/run/user/0", 
-        "XDG_SESSION_ID": "46", 
+        "XDG_SESSION_ID": "355", 
         "_": "/usr/bin/python2", 
         "_VIRTUALENVWRAPPER_API": " mkvirtualenv rmvirtualenv lsvirtualenv showvirtualenv workon add2virtualenv cdsitepackages cdvirtualenv lssitepackages toggleglobalsitepackages cpvirtualenv setvirtualenvproject mkproject cdproject mktmpenv wipeenv allvirtualenv"
     }, 
@@ -321,22 +321,22 @@
     }, 
     "ansible_machine": "x86_64", 
     "ansible_machine_id": "529437d528544e888e3b479662367f6c", 
-    "ansible_memfree_mb": 76, 
+    "ansible_memfree_mb": 71, 
     "ansible_memory_mb": {
         "nocache": {
-            "free": 1004, 
-            "used": 835
+            "free": 1127, 
+            "used": 712
         }, 
         "real": {
-            "free": 76, 
+            "free": 71, 
             "total": 1839, 
-            "used": 1763
+            "used": 1768
         }, 
         "swap": {
-            "cached": 4, 
-            "free": 1984, 
+            "cached": 96, 
+            "free": 1569, 
             "total": 2047, 
-            "used": 63
+            "used": 478
         }
     }, 
     "ansible_memtotal_mb": 1839, 
@@ -346,7 +346,7 @@
             "fstype": "xfs", 
             "mount": "/", 
             "options": "rw,relatime,attr2,inode64,noquota", 
-            "size_available": 39150780416, 
+            "size_available": 39023157248, 
             "size_total": 42928701440, 
             "uuid": "1090c5a9-166a-464c-9be6-f7958ae24e32"
         }, 
@@ -364,7 +364,7 @@
             "fstype": "xfs", 
             "mount": "/home", 
             "options": "rw,relatime,attr2,inode64,noquota", 
-            "size_available": 42681053184, 
+            "size_available": 42360573952, 
             "size_total": 168486768640, 
             "uuid": "42f1527f-2098-49e5-aa63-302aba01c8d1"
         }
@@ -413,7 +413,7 @@
     "ansible_ssh_host_key_ecdsa_public": "AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBM3lGAFLej2IGJfrxqU9RKy3TEezDmY1nkeA9AHCW/vmHPNy29UQEnGrucTil/miWyRJD6g/MoPV+igg13iGV10=", 
     "ansible_ssh_host_key_ed25519_public": "AAAAC3NzaC1lZDI1NTE5AAAAICn3wVYXns5yjk5hvrDOLYukCOplDmXjgbEBv9iK7GPw", 
     "ansible_ssh_host_key_rsa_public": "AAAAB3NzaC1yc2EAAAADAQABAAABAQCzxfaYLA/0UeJ0c5VNIftQKiO6XTGLYhPxj15U4mRWwEAmEwOmtBr2UrXBn3jkHBx+NsmnX9zHbpIC+niZrXv1IThDNNzwLZtKfC3Sn/T3aGaQ0ASl03kJxPan9mmVi/9fHVbroSXo9ZfEb7wRdE6ssDPjBqYjAmV5QnbIHJC1WQJ78rm9nm4thh5cKFd/oZ5X5/QTcVGm+P285li6U4TasX8s4+AFf0/fcdRbgaOpvlKI4RbegGB+h9/JDCkLy71kLWNiIFqLNp1p0KHSALw7HmZYbN5YR7T9QIjsmh7zcZI8TX2P6N/F8mFw/RCEB6U+6aZ/vysKg/TbvyzB7QHL", 
-    "ansible_swapfree_mb": 1984, 
+    "ansible_swapfree_mb": 1569, 
     "ansible_swaptotal_mb": 2047, 
     "ansible_system": "Linux", 
     "ansible_system_capabilities": [
@@ -457,7 +457,7 @@
     ], 
     "ansible_system_capabilities_enforced": "True", 
     "ansible_system_vendor": "Red Hat", 
-    "ansible_uptime_seconds": 21742, 
+    "ansible_uptime_seconds": 158035, 
     "ansible_user_dir": "/root", 
     "ansible_user_gecos": "root", 
     "ansible_user_gid": 0, 

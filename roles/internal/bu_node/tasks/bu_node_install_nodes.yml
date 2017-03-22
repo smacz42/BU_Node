@@ -19,24 +19,24 @@
 # bitcoinunlimited.info was undergoing a DDoS attack when writing this, and
 # /u/s1ckpig informed me that github mirrors all the releases. So if this fails,
 # we can safely skip it and get the one from github
-- name: (bu_node_install_nodes) [3/5] Bitcoin Unlimited files are downloaded from bitcoinunlimited.info
-  get_url:
-    url: https://www.bitcoinunlimited.info/components/bitcoin-unlimited-web-downloads/bitcoinUnlimited-1.0.1.1-linux64.tar.gz
-    dest: /opt/bitcoinUnlimited-1.0.1.1.tar.gz
-    remote_src: True
-  register: result
-  ignore_errors: yes
+#- name: (bu_node_install_nodes) [3/5] Bitcoin Unlimited files are downloaded from bitcoinunlimited.info
+#  get_url:
+#    url: https://www.bitcoinunlimited.info/components/bitcoin-unlimited-web-downloads/bitcoinUnlimited-1.0.1.2-linux64.tar.gz
+#    dest: /opt/bitcoinUnlimited-1.0.1.2.tar.gz
+#    remote_src: True
+#  register: result
+#  ignore_errors: yes
 
 - name: (bu_node_install_nodes) [3/5] Bitcoin Unlimited files are downloaded from github
   get_url:
-    url: https://github.com/BitcoinUnlimited/BitcoinUnlimitedWebDownloads/raw/master/bitcoinUnlimited-1.0.1.1-linux64.tar.gz
-    dest: /opt/bitcoinUnlimited-1.0.1.1.tar.gz
+    url: https://github.com/BitcoinUnlimited/BitcoinUnlimitedWebDownloads/raw/master/bitcoinUnlimited-1.0.1.2-linux64.tar.gz
+    dest: /opt/bitcoinUnlimited-1.0.1.tar.gz
     remote_src: True
-  when: result|failed
+    #when: result|failed
 
 - name: (bu_node_install_nodes) [4/5] Bitcoin Unlimited files are unpacked
   unarchive:
-    src: /opt/bitcoinUnlimited-1.0.1.1.tar.gz
+    src: /opt/bitcoinUnlimited-1.0.1.tar.gz
     dest: /opt/
     copy: no
 
